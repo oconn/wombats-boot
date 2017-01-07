@@ -3,18 +3,30 @@
             [datomic.api :as d]
             [io.pedestal.log :as log]))
 
-;; Private helper methods
+;; Private helper functions
 
-
+(defn- create-db-connection
+  [config]
+  (let [datomic-uri (get-in config [:settings :datomic :uri] nil)
+        conn (d/connect datomic-uri)
+        db (d/db conn)]
+    {:conn conn
+     :db db}))
 
 ;; Component
 
-(defrecord Datomic [config conn]
+(defrecord Datomic [config database]
   component/Lifecycle
   (start [component]
-    component)
+    (if database
+      component
+      (assoc component :database (create-db-connection config))))
   (stop [component]
-    component))
+    (if-not database
+      component
+      (do
+        (d/release (:conn database))
+        (assoc component :database nil)))))
 
 ;; Public component methods
 

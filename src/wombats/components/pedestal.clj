@@ -1,115 +1,53 @@
-
 (ns wombats.components.pedestal
   (:require [com.stuartsierra.component :as component]
             [io.pedestal.http :as http]
-            [io.pedestal.interceptor :refer [interceptor]]))
+            [io.pedestal.http.route :as route]
+            [io.pedestal.http.jetty.websockets :as ws]))
 
-;; --- Service Map Provider ---
+;; Private helper functions
 
-(defprotocol ServiceMapProvider
-  (service-map [this] "Provides a service map."))
+(defn- create-service-map
+  [config service]
+  (let [env (:env config)
+        {:keys [port type
+                join? container-options]} (get-in config [:settings :pedestal])
+        {:keys [api-routes ws-routes]} (get-in service [:service])]
+    {:env env
+     ::http/routes api-routes
+     ::http/port port
+     ::http/type type
+     ::http/join? join?
+     ::http/container-options (merge container-options
+                                     {:context-configurator #(ws/add-ws-endpoints %
+                                                                                  ws-routes)})}))
 
-(extend-protocol ServiceMapProvider
-  clojure.lang.APersistentMap
-  (service-map [this] this)
+(defn- start-http-server
+  [service-map]
+  (let [isDev? (= (:env service-map) :dev)]
+    (cond-> service-map
+      true http/default-interceptors
+      isDev? http/dev-interceptors
+      true (http/create-server)
+      true (http/start))))
 
-  nil
-  (service-map [_] {}))
+;; Component
 
-(defprotocol Service
-  (service-fn [this] "The service fn"))
-
-;; --- Pedestal component helpers ---
-
-(def attribution-meta
-  "Metadata attributing Stuart Sierra's component.pedestal"
-  {:author "Stuart Sierra"
-   :repo "https://github.com/stuartsierra/component.pedestal"})
-
-(defn ^attribution-meta insert-context-interceptor
-  "Returns an interceptor which associates key with value in the
-  Pedestal context map."
-  [key value]
-  (interceptor/interceptor
-   {:name ::insert-context
-    :enter (fn [context] (assoc context key value))}))
-
-(defn- ^attribution-meta get-pedestal
-  "Retrieves the Pedestal component from the context.
-  Throws an exception if it isn't found."
-  [context]
-  (let [pedestal (::pedestal context)]
-    (when-not pedestal
-      (throw (ex-info (str "Pedestal component was nil in context map; "
-                           "component.pedestal is not configured correctly")
-                      {:reason ::nil-pedestal
-                       :context context})))
-    pedestal))
-
-(defn ^attribution-meta context-component
-  "Returns the component at key from the Pedestal context map. key
-  must have been a declared dependency of the Pedestal server
-  component."
-  [context key]
-  (let [component (get (get-pedestal context) key ::not-found)]
-    (when (nil? component)
-      (throw (ex-info (str "Component " key " was nil in Pedestal dependencies; "
-                           "maybe it returned nil from start or stop")
-                      {:reason ::nil-component
-                       :dependency-key key
-                       :context context})))
-    (when (= ::not-found component)
-      (throw (ex-info (str "Missing component " key " from Pedestal dependencies")
-                      {:reason ::missing-dependency
-                       :dependency-key key
-                       :context context})))
-    component))
-
-(defn ^attribution-meta using-component
-  "Returns an interceptor which associates the component named key
-  into the Ring-style request map as :component. The key must have
-  been declared a dependency of the Pedestal server component.
-  You can add this interceptor to your Pedestal routes to make the
-  component available to your Ring-style handler functions, which can
-  get :component from the request map."
-  ([key]
-   (using-component key key))
-
-  ([pedestal-key request-key]
-   (interceptor/interceptor
-    {:name ::using-component
-     :enter (fn [context]
-              (assoc-in context [:request request-key]
-                        (context-component context pedestal-key)))})))
-
-;; --- component implementation ---
-
-(defrecord Pedestal [service-map-provider start-fn stop-fn service]
+(defrecord Pedestal [config service server]
   component/Lifecycle
-  (start [this]
-    (if service
-      this
-      (-> service-map-provider
-          service-map
-          http/default-interceptors
-          (update ::http/interceptors conj (insert-context-interceptor ::pedestal this))
-          (http/create-server)
-          (start-fn)
-          ((partial assoc this :service)))))
+  (start [component]
+    (if server
+      component
+      (assoc component :server (-> (create-service-map config service)
+                                   (start-http-server)))))
+  (stop [component]
+    (if-not server
+      component
+      (do
+        (http/stop server)
+        (assoc component :server nil)))))
 
-  (stop [this]
-    (when service
-      (stop-fn service))
-    (assoc this :service nil))
-
-  Service
-  (service-fn [this]
-    (get-in this [:service ::http/service-fn])))
+;; Public component methods
 
 (defn new-pedestal
-  ([]
-   (new-pedestal http/start http/stop))
-
-  ([start-fn stop-fn]
-   (map->Pedestal {:start-fn start-fn
-                   :stop-fn  stop-fn})))
+  []
+  (map->Pedestal {}))

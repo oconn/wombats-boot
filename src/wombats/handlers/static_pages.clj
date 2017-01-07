@@ -7,5 +7,5 @@
     (go
       (>! ch (assoc context :response (assoc response
                                              :status 200
-                                             :body "Wombats!"))))
+                                             :body "Wombats!!!!"))))
     ch))

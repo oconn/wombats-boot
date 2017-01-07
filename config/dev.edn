@@ -1,1 +1,3 @@
-{:datomic {:uri "datomic:free://localhost:4334/wombats-dev"}}
+{:datomic {:uri "datomic:free://localhost:4334/wombats-dev"}
+ :pedestal {:port 8888
+            :container-options {:ssl? false}}}

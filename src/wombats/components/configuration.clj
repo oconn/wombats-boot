@@ -58,7 +58,7 @@
       component
       (assoc component :settings nil))))
 
-;; Public component methods
+;; Public component function
 
 (defn new-configuration
   "Creates a new system component that manages application configuration.
