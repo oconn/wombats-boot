@@ -6,7 +6,8 @@
 
 (def ^:private game-connections (atom {}))
 
-(defn reset-atom
+(defn- reset-atom
+  "NOTE: Dev Only. Resets game-connections state"
   []
   (reset! game-connections {}))
 
@@ -16,6 +17,7 @@
 
 (defn- command-handler
   [chan-id msg]
+
   )
 
 (def ^:private

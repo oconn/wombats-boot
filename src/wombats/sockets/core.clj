@@ -6,33 +6,42 @@
 ;; Helpers
 
 (defn parse-raw
+  "Attempts to parse the clent message as EDN"
   [raw-message]
   (try
     (edn/read-string raw-message)
     (catch Exception e (prn (str "Invalid client message: " raw-message)))))
 
-(defn send-msg [msg] (prn-str msg))
+(defn send-msg
+  "Converts the msg into a string before sending it"
+  [msg] (prn-str msg))
 
 ;; Handlers
 
 (defn socket-error
+  "Called when there has been an error"
   [t]
   (prn (str "WS Error " (.getMessage t))))
 
 (defn socket-close
+  "Called when a websocket has closed"
   [code reason]
   (prn (str "WS Closed - Code: " code " Reason: " reason)))
 
 (defn- handshake-handler
+  "Responsible for adding the channel to the websocket atom"
   [ws-atom]
   (fn [chan-id msg]
-    (swap! ws-atom assoc-in [chan-id :metadata] msg)
-    (clojure.pprint/pprint @ws-atom)))
+    (swap! ws-atom assoc-in [chan-id :metadata] msg)))
 
 (defn- keep-alive
+  "Jetty's WS server has an idle timeout. This handler supports keeping
+  that connection open"
   [chan-id msg])
 
 (defn create-socket-handler-map
+  "Allows for adding custom handlers that respond to namespaced messages
+  emitted from the ws channel"
   [handler-map ws-atom]
   (fn [raw-msg]
     (let [msg (parse-raw raw-msg)
@@ -43,9 +52,9 @@
                                    :keep-alive keep-alive}))]
 
       ;; Log in dev mode
-      (println "\n---------------------------------")
+      (println "\n---------- Start Client Message ----------")
       (clojure.pprint/pprint msg)
-      (println "---------------------------------\n\n")
+      (println "------------ End Client Message ----------\n\n")
 
       (msg-fn chan-id msg-payload))))
 
@@ -60,12 +69,12 @@
       (prn (str "Connection " chan-id " establised"))
 
       ;; Poll for closed socket
-      (go-loop [is-closed? (.closed? send-ch)]
-        (<! (timeout 1000))
-        (prn is-closed?)
-        (if is-closed?
-          (remove-chan ws-atom chan-id)
-          (recur (.closed? send-ch))))
+      ;; (go-loop [is-closed? (.closed? send-ch)]
+      ;;   (<! (timeout 5000))
+      ;;   (prn is-closed?)
+      ;;   (if is-closed?
+      ;;     (remove-chan ws-atom chan-id)
+      ;;     (recur (.closed? send-ch))))
 
       (swap! ws-atom assoc chan-id {:session ws-session
                                     :chan send-ch

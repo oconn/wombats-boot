@@ -35,3 +35,53 @@ Since this is a Clojure project, our sockets encourage the use of EDN, however d
           :chan-id CHANNEL_ID}
    :payload MESSAGE_PAYLOAD}
   ```
+
+### Message Types
+
+#### Server
+
+##### :handshake
+
+```clj
+{:chan-id 1234}
+```
+
+Sends the channel id back to the client
+
+##### :frame-update
+
+```clj
+{:arena [[]]}
+```
+
+Sends a new frame to the client
+
+#### Client
+
+##### :handshake
+
+Sends the user information to the Server
+
+```clj
+{:user-id 1234
+ :game-id 5678}
+```
+
+##### :cmd
+
+Sends a users command choice to the Server
+
+```clj
+{:cmd :move-up}
+```
+
+###### Command list
+
+```clj
+:move-forward
+:move-backwards
+:turn-right
+:turn-left
+:smoke
+:shoot
+```
