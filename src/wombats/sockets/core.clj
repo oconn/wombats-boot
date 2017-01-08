@@ -14,11 +14,11 @@
 
 (defn socket-error
   [t]
-  (prn (str "WS Error " t)))
+  (prn (str "WS Error " (.getMessage t))))
 
 (defn socket-close
-  [num-code reason-text]
-  (prn (str "WS Closed: " reason-text)))
+  [code reason]
+  (prn (str "WS Closed: " reason)))
 
 (defn new-ws-connection
   [ws-atom]

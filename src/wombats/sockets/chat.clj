@@ -12,6 +12,6 @@
 (defn chat-room-map
   [datomic]
   {:on-connect (ws/start-ws-connection (ws-core/new-ws-connection chat-connections))
-   :on-text    chat-message
+   :on-message chat-message
    :on-error   ws-core/socket-error
    :on-close   ws-core/socket-close})

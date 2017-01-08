@@ -11,13 +11,14 @@
 (s/def ::game-handshake (s/keys :req [::user-id ::game-id]))
 
 (defn game-message
-  [raw-msg]
+  [raw-msg session]
+  (prn session)
   (let [msg (ws-core/parse-raw raw-msg)]
-    (prn msg)))
+    ))
 
 (defn in-game-ws
   [datomic]
   {:on-connect (ws/start-ws-connection (ws-core/new-ws-connection game-connections))
-   :on-text    game-message
+   :on-message game-message
    :on-error   ws-core/socket-error
    :on-close   ws-core/socket-close})

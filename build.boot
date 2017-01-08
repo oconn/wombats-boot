@@ -23,6 +23,7 @@
                             ;; HTTP Server
                             [io.pedestal/pedestal.service "0.5.1"]
                             [io.pedestal/pedestal.jetty   "0.5.1"]
+                            ;; [io.pedestal/pedestal.immutant "0.5.1"]
 
                             ;; Logging
                             [org.slf4j/jul-to-slf4j     "1.7.21"]
