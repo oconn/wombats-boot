@@ -1,7 +1,7 @@
 # Gettings started (Developers Guide)
 
-[Home](../../README.md)
-[Development Home](./home.md)
+- [Home](../../README.md)
+- [Development Home](./home.md)
 
 ### Architectural Overview
 
@@ -37,8 +37,8 @@ Check out Stuart Sierra's [reloaded workflow](http://thinkrelevance.com/blog/201
 
 #### reloaded commands
 
-`reloaded.repl/go`
-`reloaded.repl/reset`
-`reloaded.repl/reset-all`
-`reloaded.repl/start`
-`reloaded.repl/stop`
+- `reloaded.repl/go`
+- `reloaded.repl/reset`
+- `reloaded.repl/reset-all`
+- `reloaded.repl/start`
+- `reloaded.repl/stop`

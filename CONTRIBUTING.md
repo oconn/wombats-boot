@@ -1,5 +1,5 @@
 # Contributing to Wombats
 
-[Home](.README.md)
+[Home](./README.md)
 
 ## TODO

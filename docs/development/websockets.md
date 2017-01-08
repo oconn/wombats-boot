@@ -1,5 +1,8 @@
 # Working with WebSockets
 
+- [Home](../../README.md)
+- [Development Home](./home.md)
+
 ### Overview
 
 Wombats uses websockets' full-duplex communication channels to pass game information to the clients, and to enable chat to enhance the in game experience.
@@ -40,7 +43,7 @@ Since this is a Clojure project, our sockets encourage the use of EDN, however d
 
 #### Server
 
-##### :handshake
+**:handshake**
 
 ```clj
 {:chan-id 1234}
@@ -48,7 +51,7 @@ Since this is a Clojure project, our sockets encourage the use of EDN, however d
 
 Sends the channel id back to the client
 
-##### :frame-update
+**:frame-update**
 
 ```clj
 {:arena [[]]}
@@ -58,7 +61,7 @@ Sends a new frame to the client
 
 #### Client
 
-##### :handshake
+**:handshake**
 
 Sends the user information to the Server
 
@@ -67,7 +70,7 @@ Sends the user information to the Server
  :game-id 5678}
 ```
 
-##### :cmd
+**:cmd**
 
 Sends a users command choice to the Server
 
@@ -84,4 +87,17 @@ Sends a users command choice to the Server
 :turn-left
 :smoke
 :shoot
+```
+
+#### Test Client
+
+```js
+let connId = null;
+
+const messageBus = (message) => {
+    if ()
+};
+
+let w = new WebSocket("ws://localhost:8888/ws/game");
+w.onmessage= messageBus;
 ```
