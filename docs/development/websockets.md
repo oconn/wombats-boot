@@ -17,6 +17,7 @@ Since this is a Clojure project, our sockets encourage the use of EDN, however d
     {:meta {:type :handshake
             :channel-id 1234}}
     ```
+
 - Client then sends back to the server identifying information
 
     ```clj
@@ -25,8 +26,10 @@ Since this is a Clojure project, our sockets encourage the use of EDN, however d
      :payload {:user-id 5678
                :game-id 4321}}
     ```
+
 - The server now associates the appropriate user / game information with the correct channel.
 - All subsequent client messages must contain the following
+
   ```clj
   {:meta {:type MESSAGE_TYPE
           :channel-id CHANNEL_ID}
