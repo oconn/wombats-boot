@@ -14,15 +14,15 @@ Since this is a Clojure project, our sockets encourage the use of EDN, however d
 - Server saves the channel id and channel to in memory state and responds to the channel with
 
     ```clj
-    {:meta {:type :handshake
-            :channel-id 1234}}
+    {:meta {:msg-type :handshake}
+     :payload {:chan-id 1234}}
     ```
 
 - Client then sends back to the server identifying information
 
     ```clj
-    {:meta {:type :handshake
-            :channel-id 1234}
+    {:meta {:msg-type :handshake
+            :chan-id 1234}
      :payload {:user-id 5678
                :game-id 4321}}
     ```
@@ -31,7 +31,7 @@ Since this is a Clojure project, our sockets encourage the use of EDN, however d
 - All subsequent client messages must contain the following
 
   ```clj
-  {:meta {:type MESSAGE_TYPE
-          :channel-id CHANNEL_ID}
+  {:meta {:msg-type MESSAGE_TYPE
+          :chan-id CHANNEL_ID}
    :payload MESSAGE_PAYLOAD}
   ```
