@@ -88,16 +88,3 @@ Sends a users command choice to the Server
 :smoke
 :shoot
 ```
-
-#### Test Client
-
-```js
-let connId = null;
-
-const messageBus = (message) => {
-    if ()
-};
-
-let w = new WebSocket("ws://localhost:8888/ws/game");
-w.onmessage= messageBus;
-```
