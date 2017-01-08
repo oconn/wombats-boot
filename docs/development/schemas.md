@@ -32,6 +32,7 @@
 :fog             ;; Map Fog
 :food            ;; Food
 :poison          ;; Poison
+:open            ;; Open Space
 ```
 
 #### Cell Properties
@@ -89,6 +90,12 @@
 ```
 
 **poison**
+
+```clj
+{}
+```
+
+**open**
 
 ```clj
 {}
