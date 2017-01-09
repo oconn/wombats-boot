@@ -62,6 +62,11 @@
   [ws-atom chan-id]
   (prn (str "remove-chan" chan-id)))
 
+(defn send-message
+  [ws-atom chan-id message]
+  (let [chan (get-in @ws-atom [chan-id :chan])]
+    (put! chan (send-msg message))))
+
 (defn new-ws-connection
   [ws-atom datomic]
   (fn [ws-session send-ch]
