@@ -47,9 +47,9 @@
     (let [msg (parse-raw raw-msg)
           {:keys [chan-id msg-type]} (get msg :meta)
           msg-payload (get msg :payload {})
-          msg-fn (msg-type (merge handler-map
-                                  {:handshake (handshake-handler ws-atom)
-                                   :keep-alive keep-alive}))]
+          msg-fn (msg-type (merge {:handshake (handshake-handler ws-atom)
+                                   :keep-alive keep-alive}
+                                  handler-map))]
 
       ;; Log in dev mode
       (println "\n---------- Start Client Message ----------")
@@ -63,7 +63,7 @@
   (prn (str "remove-chan" chan-id)))
 
 (defn new-ws-connection
-  [ws-atom]
+  [ws-atom datomic]
   (fn [ws-session send-ch]
     (let [chan-id (.hashCode ws-session)]
       (prn (str "Connection " chan-id " establised"))
