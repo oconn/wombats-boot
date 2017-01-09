@@ -8,6 +8,7 @@
 (defn- create-db-connection
   [config]
   (let [datomic-uri (get-in config [:settings :datomic :uri] nil)
+        _ (d/create-database datomic-uri)
         conn (d/connect datomic-uri)
         db (d/db conn)]
     {:conn conn
