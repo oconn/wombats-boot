@@ -1,20 +1,25 @@
 (ns wombats.sockets.core
   "Core library for working with wombat socket channels"
-  (:require [clojure.core.async :as a :refer [put! <! go-loop timeout]]
+  (:require [clojure.core.async :as a :refer [put! <! timeout]]
             [clojure.edn :as edn]))
 
 ;; Helpers
 
-(defn parse-raw
+(defn parse-message
   "Attempts to parse the clent message as EDN"
   [raw-message]
   (try
     (edn/read-string raw-message)
     (catch Exception e (prn (str "Invalid client message: " raw-message)))))
 
-(defn send-msg
+(defn format-message
   "Converts the msg into a string before sending it"
   [msg] (prn-str msg))
+
+(defn send-message
+  [ws-atom chan-id message]
+  (let [chan (get-in @ws-atom [chan-id :chan])]
+    (put! chan (format-message message))))
 
 ;; Handlers
 
@@ -44,7 +49,7 @@
   emitted from the ws channel"
   [handler-map ws-atom]
   (fn [raw-msg]
-    (let [msg (parse-raw raw-msg)
+    (let [msg (parse-message raw-msg)
           {:keys [chan-id msg-type]} (get msg :meta)
           msg-payload (get msg :payload {})
           msg-fn (msg-type (merge {:handshake (handshake-handler ws-atom)
@@ -61,11 +66,6 @@
 (defn- remove-chan
   [ws-atom chan-id]
   (prn (str "remove-chan" chan-id)))
-
-(defn send-message
-  [ws-atom chan-id message]
-  (let [chan (get-in @ws-atom [chan-id :chan])]
-    (put! chan (send-msg message))))
 
 (defn new-ws-connection
   [ws-atom datomic]
@@ -85,5 +85,7 @@
                                     :chan send-ch
                                     :metadata {}})
 
-      (put! send-ch (send-msg {:meta {:msg-type :handshake}
-                               :payload {:chan-id chan-id}})))))
+      (send-message ws-atom
+                    chan-id
+                    {:meta {:msg-type :handshake}
+                     :payload {:chan-id chan-id}}))))

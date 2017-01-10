@@ -1,6 +1,7 @@
 (ns wombats.sockets.game
   (:require [clojure.spec :as s]
             [clojure.core.async :refer [put!]]
+            [clojure.edn :as edn]
             [io.pedestal.http.jetty.websockets :as ws]
             [wombats.sockets.core :as ws-core]))
 
@@ -9,6 +10,28 @@
 (s/def ::user-id int?)
 (s/def ::game-id int?)
 (s/def ::game-handshake (s/keys :req [::user-id ::game-id]))
+
+;; -------------------------------------
+;; -------- Dev Simulator --------------
+;; -------------------------------------
+
+(defn- get-arena
+  [name]
+  (edn/read-string (slurp (str "resources/arena/" name))))
+
+(defn- start-simulation
+  [chan-id]
+  (let [frames [(get-arena "small-1.edn")
+                (get-arena "small-2.edn")
+                (get-arena "small-3.edn")]]
+
+    (doall (map (fn [frame]
+                  (Thread/sleep 1500)
+                  (ws-core/send-message game-connections
+                                        chan-id
+                                        {:meta {:msg-type :frame-update}
+                                         :payload {:arena frame}}))
+                frames))))
 
 ;; -------------------------------------
 ;; -------- Message Handlers -----------
@@ -34,229 +57,9 @@
     ;; TODO Auth / Game lookup
 
     (swap! game-connections assoc-in [chan-id :metadata] msg)
-    (ws-core/send-message game-connections
-                          chan-id
-                          {:meta {:msg-type :frame-update}
-                           :payload {:arena [[{:cell-type :wood-barrier
-   :cell-properties {:percent-decay 0}}
-  {:cell-type :wood-barrier
-   :cell-properties {:percent-decay 0}}
-  {:cell-type :wood-barrier
-   :cell-properties {:percent-decay 0}}
-  {:cell-type :steel-barrier
-   :cell-properties {}}
-  {:cell-type :steel-barrier
-   :cell-properties {}}
-  {:cell-type :steel-barrier
-   :cell-properties {}}
-  {:cell-type :steel-barrier
-   :cell-properties {}}
-  {:cell-type :open
-   :cell-properties {}}
-  {:cell-type :open
-   :cell-properties {}}
-  {:cell-type :open
-   :cell-properties {}}]
- [{:cell-type :wood-barrier
-   :cell-properties {:percent-decay 0}}
-  {:cell-type :open
-   :cell-properties {}}
-  {:cell-type :poison
-   :cell-properties {}}
-  {:cell-type :open
-   :cell-properties {}}
-  {:cell-type :food
-   :cell-properties {}}
-  {:cell-type :food
-   :cell-properties {}}
-  {:cell-type :zakano
-   :cell-properties {:hp 100
-                     :orientation :n}}
-  {:cell-type :open
-   :cell-properties {}}
-  {:cell-type :poison
-   :cell-properties {}}
-  {:cell-type :wood-barrier
-   :cell-properties {:percent-decay 0}}]
- [{:cell-type :wood-barrier
-   :cell-properties {:percent-decay 0}}
-  {:cell-type :open
-   :cell-properties {}}
-  {:cell-type :open
-   :cell-properties {}}
-  {:cell-type :wombat
-   :cell-properties {:hp 100
-                     :orientation :s
-                     :username "oconn"
-                     :color "#333333"}}
-  {:cell-type :open
-   :cell-properties {}}
-  {:cell-type :open
-   :cell-properties {}}
-  {:cell-type :open
-   :cell-properties {}}
-  {:cell-type :open
-   :cell-properties {}}
-  {:cell-type :food
-   :cell-properties {}}
-  {:cell-type :wood-barrier
-   :cell-properties {:percent-decay 0}}]
- [{:cell-type :wood-barrier
-   :cell-properties {:percent-decay 0}}
-  {:cell-type :food
-   :cell-properties {}}
-  {:cell-type :open
-   :cell-properties {}}
-  {:cell-type :wombat
-   :cell-properties {:hp 100
-                     :orientation :e
-                     :username "cp"
-                     :color "#444444"}}
-  {:cell-type :open
-   :cell-properties {}}
-  {:cell-type :open
-   :cell-properties {}}
-  {:cell-type :open
-   :cell-properties {}}
-  {:cell-type :poison
-   :cell-properties {}}
-  {:cell-type :open
-   :cell-properties {}}
-  {:cell-type :wood-barrier
-   :cell-properties {:percent-decay 0}}]
- [{:cell-type :wood-barrier
-   :cell-properties {:percent-decay 0}}
-  {:cell-type :zakano
-   :cell-properties {:hp 100
-                     :orientation :n}}
-  {:cell-type :open
-   :cell-properties {}}
-  {:cell-type :open
-   :cell-properties {}}
-  {:cell-type :wombat
-   :cell-properties {:hp 100
-                     :orientaiton :n
-                     :username "emily"
-                     :color "#111111"}}
-  {:cell-type :open
-   :cell-properties {}}
-  {:cell-type :open
-   :cell-properties {}}
-  {:cell-type :open
-   :cell-properties {}}
-  {:cell-type :wombat
-   :cell-properties {:hp 100
-                     :orientation :s
-                     :username "jesse"
-                     :color "#222222"}}
-  {:cell-type :wood-barrier
-   :cell-properties {:percent-decay 0}}]
- [{:cell-type :wood-barrier
-   :cell-properties {:percent-decay 0}}
-  {:cell-type :open
-   :cell-properties {}}
-  {:cell-type :food
-   :cell-properties {}}
-  {:cell-type :open
-   :cell-properties {}}
-  {:cell-type :zakano
-   :cell-properties {:hp 100
-                     :orientation :n}}
-  {:cell-type :open
-   :cell-properties {}}
-  {:cell-type :food
-   :cell-properties {}}
-  {:cell-type :open
-   :cell-properties {}}
-  {:cell-type :open
-   :cell-properties {}}
-  {:cell-type :wood-barrier
-   :cell-properties {:percent-decay 0}}]
- [{:cell-type :wood-barrier
-   :cell-properties {:percent-decay 0}}
-  {:cell-type :zakano
-   :cell-properties {:hp 100
-                     :orientation :n}}
-  {:cell-type :open
-   :cell-properties {}}
-  {:cell-type :open
-   :cell-properties {}}
-  {:cell-type :open
-   :cell-properties {}}
-  {:cell-type :wombat
-   :cell-properties {:hp 100
-                     :orientation :w
-                     :username "gregg"
-                     :color "#555555"}}
-  {:cell-type :open
-   :cell-properties {}}
-  {:cell-type :open
-   :cell-properties {}}
-  {:cell-type :open
-   :cell-properties {}}
-  {:cell-type :wood-barrier
-   :cell-properties {:percent-decay 0}}]
- [{:cell-type :wood-barrier
-   :cell-properties {:percent-decay 0}}
-  {:cell-type :open
-   :cell-properties {}}
-  {:cell-type :open
-   :cell-properties {}}
-  {:cell-type :zakano
-   :cell-properties {:hp 100
-                     :orientation :n}}
-  {:cell-type :open
-   :cell-properties {}}
-  {:cell-type :open
-   :cell-properties {}}
-  {:cell-type :poison
-   :cell-properties {}}
-  {:cell-type :open
-   :cell-properties {}}
-  {:cell-type :open
-   :cell-properties {}}
-  {:cell-type :wood-barrier
-   :cell-properties {:percent-decay 0}}]
- [{:cell-type :wood-barrier
-   :cell-properties {:percent-decay 0}}
-  {:cell-type :poison
-   :cell-properties {}}
-  {:cell-type :open
-   :cell-properties {}}
-  {:cell-type :open
-   :cell-properties {}}
-  {:cell-type :open
-   :cell-properties {}}
-  {:cell-type :open
-   :cell-properties {}}
-  {:cell-type :open
-   :cell-properties {}}
-  {:cell-type :open
-   :cell-properties {}}
-  {:cell-type :open
-   :cell-properties {}}
-  {:cell-type :wood-barrier
-   :cell-properties {:percent-decay 0}}]
- [{:cell-type :wood-barrier
-   :cell-properties {:percent-decay 0}}
-  {:cell-type :wood-barrier
-   :cell-properties {:percent-decay 0}}
-  {:cell-type :wood-barrier
-   :cell-properties {:percent-decay 0}}
-  {:cell-type :steel-barrier
-   :cell-properties {}}
-  {:cell-type :steel-barrier
-   :cell-properties {}}
-  {:cell-type :steel-barrier
-   :cell-properties {}}
-  {:cell-type :steel-barrier
-   :cell-properties {}}
-  {:cell-type :open
-   :cell-properties {}}
-  {:cell-type :open
-   :cell-properties {}}
-  {:cell-type :open
-   :cell-properties {}}]]}})))
+
+    ;; Simulation for dev mode
+    (start-simulation chan-id)))
 
 (defn- message-handlers
   [datomic]
