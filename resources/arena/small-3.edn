@@ -30,9 +30,8 @@
    :cell-properties {}}
   {:cell-type :food
    :cell-properties {}}
-  {:cell-type :zakano
-   :cell-properties {:hp 100
-                     :orientation :n}}
+  {:cell-type :open
+   :cell-properties {}}
   {:cell-type :open
    :cell-properties {}}
   {:cell-type :poison
@@ -56,8 +55,9 @@
                      :color "#333333"}}
   {:cell-type :open
    :cell-properties {}}
-  {:cell-type :open
-   :cell-properties {}}
+  {:cell-type :zakano
+   :cell-properties {:hp 100
+                     :orientation :n}}
   {:cell-type :food
    :cell-properties {}}
   {:cell-type :wood-barrier
@@ -101,15 +101,15 @@
                      :color "#111111"}}
   {:cell-type :open
    :cell-properties {}}
-  {:cell-type :open
-   :cell-properties {}}
-  {:cell-type :open
-   :cell-properties {}}
   {:cell-type :wombat
    :cell-properties {:hp 100
                      :orientation :s
                      :username "jesse"
                      :color "#222222"}}
+  {:cell-type :open
+   :cell-properties {}}
+  {:cell-type :open
+   :cell-properties {}}
   {:cell-type :wood-barrier
    :cell-properties {:percent-decay 0}}]
  [{:cell-type :wood-barrier
@@ -120,9 +120,8 @@
    :cell-properties {}}
   {:cell-type :open
    :cell-properties {}}
-  {:cell-type :zakano
-   :cell-properties {:hp 100
-                     :orientation :n}}
+  {:cell-type :open
+   :cell-properties {}}
   {:cell-type :open
    :cell-properties {}}
   {:cell-type :food
@@ -135,13 +134,17 @@
    :cell-properties {:percent-decay 0}}]
  [{:cell-type :wood-barrier
    :cell-properties {:percent-decay 0}}
+  {:cell-type :open
+   :cell-properties {}}
+  {:cell-type :open
+   :cell-properties {}}
+  {:cell-type :open
+   :cell-properties {}}
+  {:cell-type :open
+   :cell-properties {}}
   {:cell-type :zakano
    :cell-properties {:hp 100
                      :orientation :n}}
-  {:cell-type :open
-   :cell-properties {}}
-  {:cell-type :open
-   :cell-properties {}}
   {:cell-type :open
    :cell-properties {}}
   {:cell-type :wombat
@@ -151,16 +154,10 @@
                      :color "#555555"}}
   {:cell-type :open
    :cell-properties {}}
-  {:cell-type :open
-   :cell-properties {}}
-  {:cell-type :open
-   :cell-properties {}}
   {:cell-type :wood-barrier
    :cell-properties {:percent-decay 0}}]
  [{:cell-type :wood-barrier
    :cell-properties {:percent-decay 0}}
-  {:cell-type :open
-   :cell-properties {}}
   {:cell-type :open
    :cell-properties {}}
   {:cell-type :zakano
@@ -170,6 +167,9 @@
    :cell-properties {}}
   {:cell-type :open
    :cell-properties {}}
+  {:cell-type :zakano
+   :cell-properties {:hp 100
+                     :orientation :n}}
   {:cell-type :poison
    :cell-properties {}}
   {:cell-type :open
