@@ -1,7 +1,6 @@
 # Game Actions
 
-- [Home](../home.md)
-- [Game Overview](./home.md)
+- [Game Overview](./)
 
 The following are actions that can be taken during game play.
 
@@ -17,3 +16,4 @@ The following are actions that can be taken during game play.
 Actions are returned by your programs main function.
 
 **TODO: Refine current messaging protocol and add documentation**
+"

@@ -1,6 +1,6 @@
 # Game Overview
 
-- [Home](../home.md)
+- [Home](../)
 
 - [In game actions](./actions.md)
 - [Arena elements](./elements.md)

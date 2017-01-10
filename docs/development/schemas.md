@@ -1,7 +1,6 @@
 # Wombats Schemas
 
-- [Home](../home.md)
-- [Development Home](./home.md)
+- [Development Home](./)
 
 ### Client Schemas
 

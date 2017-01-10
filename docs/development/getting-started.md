@@ -1,7 +1,6 @@
 # Gettings started (Developers Guide)
 
-- [Home](../home.md)
-- [Development Home](./home.md)
+- [Development Home](./)
 
 ### Architectural Overview
 

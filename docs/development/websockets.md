@@ -1,7 +1,6 @@
 # Working with WebSockets
 
-- [Home](../home.md)
-- [Development Home](./home.md)
+- [Development Home](./)
 
 ### Overview
 
