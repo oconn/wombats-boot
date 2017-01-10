@@ -26,7 +26,7 @@
                 (get-arena "small-3.edn")]]
 
     (doall (map (fn [frame]
-                  (Thread/sleep 1500)
+                  (Thread/sleep 500)
                   (ws-core/send-message game-connections
                                         chan-id
                                         {:meta {:msg-type :frame-update}
