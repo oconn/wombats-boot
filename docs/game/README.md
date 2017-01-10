@@ -2,5 +2,5 @@
 
 - [Home](../)
 
-- [In game actions](./actions.md)
-- [Arena elements](./elements.md)
+1. [In game actions](./actions.md)
+1. [Arena elements](./elements.md)
