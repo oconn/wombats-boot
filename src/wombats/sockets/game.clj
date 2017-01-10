@@ -23,7 +23,8 @@
   [chan-id]
   (let [frames [(get-arena "small-1.edn")
                 (get-arena "small-2.edn")
-                (get-arena "small-3.edn")]]
+                (get-arena "small-3.edn")
+                (get-arena "small-4.edn")]]
 
     (doall (map (fn [frame]
                   (Thread/sleep 500)
