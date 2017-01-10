@@ -4,6 +4,10 @@
 
 TODO: Mission Statement / Goals
 
+### Documentation
+
+[Documentation Home](./docs/home.md)
+
 ### Development
 
 TODO: Basic into

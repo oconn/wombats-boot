@@ -1,6 +1,6 @@
 # Arena Elements
 
-- [Home](../../README.md)
+- [Home](../home.md)
 - [Game Overview](./home.md)
 
 Each of the following elements can be found during game play.

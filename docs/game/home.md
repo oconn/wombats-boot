@@ -1,6 +1,6 @@
 # Game Overview
 
-- [Home](../../README.md)
+- [Home](../home.md)
 
-1. [In game actions](./actions.md)
-1. [Arena elements](./elements.md)
+- [In game actions](./actions.md)
+- [Arena elements](./elements.md)

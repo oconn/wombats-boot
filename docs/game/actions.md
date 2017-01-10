@@ -1,6 +1,6 @@
 # Game Actions
 
-- [Home](../../README.md)
+- [Home](../home.md)
 - [Game Overview](./home.md)
 
 The following are actions that can be taken during game play.

@@ -1,6 +1,6 @@
 # Gettings started (Developers Guide)
 
-- [Home](../../README.md)
+- [Home](../home.md)
 - [Development Home](./home.md)
 
 ### Architectural Overview
