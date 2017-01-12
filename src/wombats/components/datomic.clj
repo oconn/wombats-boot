@@ -11,6 +11,7 @@
         _ (d/create-database datomic-uri)
         conn (d/connect datomic-uri)
         db (d/db conn)]
+    (d/transact conn (load-file "resources/datomic/schema.edn"))
     {:conn conn
      :db db}))
 

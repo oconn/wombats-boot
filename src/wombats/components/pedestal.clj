@@ -21,14 +21,26 @@
                                      {:context-configurator #(ws/add-ws-endpoints %
                                                                                   ws-routes)})}))
 
+(defn- is-dev?
+  "Determins if the service is running in a dev env."
+  [service-map]
+  (= (:env service-map) :dev))
+
 (defn- start-http-server
   [service-map]
-  (let [isDev? (= (:env service-map) :dev)]
-    (cond-> service-map
-      true http/default-interceptors
-      isDev? http/dev-interceptors
-      true (http/create-server)
-      true (http/start))))
+  (cond-> service-map
+    true http/default-interceptors
+    (is-dev? service-map) http/dev-interceptors
+    true (http/create-server)
+    true (http/start)))
+
+(defn- log-connection-information
+  "Logs connection information"
+  [service-map]
+  (when-let [_ (is-dev? service-map)]
+    (prn (str "Pedestal service is running on port "
+              (::http/port service-map))))
+  service-map)
 
 ;; Component
 
@@ -38,6 +50,7 @@
     (if server
       component
       (assoc component :server (-> (create-service-map config service)
+                                   (log-connection-information)
                                    (start-http-server)))))
   (stop [component]
     (if-not server

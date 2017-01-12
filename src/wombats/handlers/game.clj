@@ -5,7 +5,8 @@
 (def game {:name :some-name
            :type :free-for-all})
 
-(defbefore get-games [{:keys [response] :as context}]
+(defbefore get-games
+  [{:keys [response] :as context}]
   (let [ch (chan 1)]
     (go
       (>! ch (assoc context :response (assoc response
@@ -13,7 +14,8 @@
                                              :body game))))
     ch))
 
-(defbefore add-game [{:keys [request response] :as context}]
+(defbefore add-game
+  [{:keys [response] :as context}]
   (let [ch (chan 1)]
     (go
       (>! ch (assoc context :response (assoc response

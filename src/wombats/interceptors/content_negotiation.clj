@@ -3,10 +3,11 @@
             [io.pedestal.http.content-negotiation :as conneg]))
 
 (def ^:private supported-types ["application/edn" "application/json" "text/plain"])
+(def ^:private default-content-type "application/edn")
 
 (defn- accepted-type
   [context]
-  (get-in context [:request :accept :field] "text/plain"))
+  (get-in context [:request :accept :field] default-content-type))
 
 (defn- transform-content
   [body content-type]
@@ -27,7 +28,7 @@
    :leave
    (fn [context]
      (cond-> context
-       (nil? (get-in context [:response :body :headers "Content-Type"]))
+       (nil? (get-in context [:response :headers "Content-Type"]))
        (update-in [:response] coerce-to (accepted-type context))))})
 
 (def content-neg-intc (conneg/negotiate-content supported-types))
