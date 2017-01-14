@@ -9,11 +9,9 @@
   [config]
   (let [datomic-uri (get-in config [:settings :datomic :uri] nil)
         _ (d/create-database datomic-uri)
-        conn (d/connect datomic-uri)
-        db (d/db conn)]
+        conn (d/connect datomic-uri)]
     (d/transact conn (load-file "resources/datomic/schema.edn"))
-    {:conn conn
-     :db db}))
+    {:conn conn}))
 
 ;; Component
 
